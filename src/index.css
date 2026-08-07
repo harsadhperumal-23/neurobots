@@ -1,0 +1,398 @@
+/* Enterprise Legal Intelligence Platform — Design System */
+/* Built in India. Ready for the world. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ── Layout System Tokens ───────────────────────── */
+  --sidebar-width:           280px;
+  --topbar-height:           72px;
+  --max-content-width:       1440px;
+
+  /* ── Warm Ivory Canvas & Indian Enterprise Palette ────── */
+  --bg-canvas:              #F7F5F1;   /* Softened warm ivory canvas */
+  --bg-secondary:           #ECE8E1;   /* Warm sidebar & secondary background */
+  --bg-card:                #FFFFFF;   /* Clean white cards surface */
+  --bg-paper:               #FBFAF8;   /* Paper-inspired legal document surface */
+  --bg-subtle:              #F0ECE4;   /* Subtle muted surface */
+  --bg-hover:               #E8F4F4;   /* Subtle teal hover tint */
+  --bg-selected:            #D6F0F0;   /* Selected item tint */
+
+  /* ── Borders & Dividers ─────────────────────────── */
+  --border-neutral:          #D6D3D1;   /* Warm stone border */
+  --border-divider:          #E7E5E4;   /* Inner divider */
+  --border-hover:            #A8A29E;
+
+  /* ── Typography Tokens (Inter) ──────────────────── */
+  --text-primary:            #0F172A;   /* Deep slate primary text */
+  --text-secondary:          #64748B;   /* Slate secondary text */
+  --text-tertiary:           #78716C;   /* Muted captions & metadata */
+  --text-disabled:           #A8A29E;   /* Disabled states */
+
+  /* ── Primary Accent (Deep Teal) ─────────────────── */
+  --action-blue:            #0E7490;   /* Primary accent */
+  --action-blue-hover:      #0891B2;
+  --action-blue-light:      #E8F4F4;   /* Active background fill */
+
+  /* ── Premium Executive Accent (Refined Warm Bronze #A07A3E) ── */
+  --ai-purple:              #A07A3E;   /* Refined Warm Bronze */
+  --ai-purple-hover:        #85622D;
+  --ai-purple-light:        #FEFCE8;   /* Subtle bronze/gold tint */
+  --ai-purple-border:       #FEF08A;
+
+  /* ── Natural & Cultural Tone Palette ───────────────── */
+  --color-granite:           #4B5563;
+  --color-temple-stone:      #8B8680;
+  --color-palm-green:        #2F6B55;
+  --color-terracotta:        #A0522D;
+
+  /* ── Statutory Status Colors ───────────────────────── */
+  --status-success:          #15803D;   /* Forest Green */
+  --status-success-bg:       #F0FDF4;
+  --status-success-border:   #BBF7D0;
+
+  --status-warning:          #B45309;   /* Amber */
+  --status-warning-bg:       #FFFBEB;
+  --status-warning-border:   #FDE68A;
+
+  --status-critical:         #B91C1C;   /* Deep Red */
+  --status-critical-bg:      #FEF2F2;
+  --status-critical-border:  #FCA5A5;
+
+  /* Legacy Compatibility Map */
+  --primary-blue:            var(--action-blue);
+  --primary-blue-hover:      var(--action-blue-hover);
+  --bg-primary:              var(--bg-canvas);
+  --text-main:               var(--text-primary);
+  --text-muted:              var(--text-secondary);
+  --text-subtle:             var(--text-tertiary);
+  --border-color:            var(--border-neutral);
+  --status-danger:           var(--status-critical);
+  --status-danger-bg:        var(--status-critical-bg);
+  --status-danger-border:    var(--status-critical-border);
+  --status-info:             var(--action-blue);
+  --status-info-bg:          var(--action-blue-light);
+  --status-info-border:      #A5F3FC;
+
+  /* ── Spacing Tokens ───────────────────────────── */
+  --space-8:   8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+
+  /* ── Typography Scale ─────────────────────────── */
+  --font-page-title: 32px;
+  --font-section:    22px;
+  --font-card:       18px;
+  --font-label:      15px;
+  --font-body:       15.5px;
+  --font-metadata:   13px;
+
+  /* ── Card Geometry & Soft Shadows ──────────────── */
+  --radius-card:     18px;
+  --radius-sm:       10px;
+  --radius-md:       14px;
+  --radius-full:     9999px;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.02);
+
+  --transition-fast:   150ms ease;
+  --transition-normal: 200ms ease;
+}
+
+/* ── Reset & Global Rules ──────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.65;
+  font-size: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+code, pre { font-family: 'JetBrains Mono', monospace; }
+
+::-webkit-scrollbar           { width: 6px; height: 6px; }
+::-webkit-scrollbar-track     { background: transparent; }
+::-webkit-scrollbar-thumb     { background: #D6D3D1; border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+/* App Shell Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-canvas);
+}
+
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--space-64);
+  max-width: var(--max-content-width);
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Responsive 12-Column Grid Layout */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-32);
+}
+
+.col-12 { grid-column: span 12; }
+.col-8  { grid-column: span 8;  }
+.col-7  { grid-column: span 7;  }
+.col-6  { grid-column: span 6;  }
+.col-5  { grid-column: span 5;  }
+.col-4  { grid-column: span 4;  }
+.col-3  { grid-column: span 3;  }
+
+@media (max-width: 1100px) {
+  .main-content { padding: 40px; }
+  .grid-12 { grid-template-columns: repeat(6, 1fr); gap: 24px; }
+  .col-12 { grid-column: span 6; }
+  .col-8, .col-7, .col-6 { grid-column: span 6; }
+  .col-5, .col-4, .col-3 { grid-column: span 3; }
+}
+
+@media (max-width: 768px) {
+  .main-content { padding: 24px; }
+  .grid-12 { grid-template-columns: 1fr; gap: 16px; }
+  .col-12, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3 { grid-column: span 1; }
+}
+
+/* Signature Product Motif: Thin Teal Vertical Accent Bar */
+.signature-accent-bar {
+  border-left: 4px solid var(--action-blue);
+  padding-left: 14px;
+}
+
+/* Executive Cards (18px radius, white surface, warm border) */
+.enterprise-card,
+.enterprise-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-neutral);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  padding: var(--space-32);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.enterprise-card:hover,
+.enterprise-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: #A8A29E;
+}
+
+/* Typography Classes */
+.page-title {
+  font-size: var(--font-page-title);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.section-title {
+  font-size: var(--font-section);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.card-title {
+  font-size: var(--font-card);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.label-text {
+  font-size: var(--font-label);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.body-text {
+  font-size: var(--font-body);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.metadata-text {
+  font-size: var(--font-metadata);
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* Action Buttons — Deep Teal Primary */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn-primary { 
+  background: var(--action-blue);
+  color: #FFFFFF; 
+  border-color: var(--action-blue);
+  box-shadow: 0 2px 6px rgba(14, 116, 144, 0.2);
+}
+.btn-primary:hover { 
+  background: var(--action-blue-hover); 
+  border-color: var(--action-blue-hover); 
+  box-shadow: 0 4px 14px rgba(14, 116, 144, 0.25);
+}
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary { 
+  background: #FFFFFF; 
+  color: var(--text-primary); 
+  border: 1px solid var(--border-neutral); 
+}
+.btn-secondary:hover { 
+  background: var(--bg-hover); 
+  border-color: var(--border-hover); 
+}
+
+/* Dedicated Warm Bronze Button (Reserved for AI Redlines & Executive Export) */
+.btn-ai,
+.btn-gold {
+  background: var(--ai-purple); /* Refined Warm Bronze #A07A3E */
+  color: #FFFFFF;
+  border-color: var(--ai-purple);
+  box-shadow: 0 2px 6px rgba(160, 122, 62, 0.2);
+}
+.btn-ai:hover,
+.btn-gold:hover {
+  background: var(--ai-purple-hover);
+  border-color: var(--ai-purple-hover);
+  box-shadow: 0 4px 14px rgba(160, 122, 62, 0.3);
+}
+
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+
+/* Enterprise Statutory Badges & Trust Indicators */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.badge-low,
+.badge-success    { background: var(--status-success-bg); color: var(--status-success); border: 1px solid var(--status-success-border); }
+
+.badge-medium,
+.badge-warning    { background: var(--status-warning-bg); color: var(--status-warning); border: 1px solid var(--status-warning-border); }
+
+.badge-high,
+.badge-critical,
+.badge-danger     { background: var(--status-critical-bg); color: var(--status-critical); border: 1px solid var(--status-critical-border); }
+
+.badge-blue,
+.badge-info,
+.badge-teal       { background: var(--action-blue-light); color: var(--action-blue); border: 1px solid #A5F3FC; }
+
+/* Warm Bronze Badge (Reserved for DPDP COMPLIANT & AI VERIFIED) */
+.badge-gold,
+.badge-ai         { background: var(--ai-purple-light); color: var(--ai-purple); border: 1px solid var(--ai-purple-border); }
+
+/* Stripe Style Tables */
+.custom-table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-neutral);
+  background: #FFFFFF;
+  box-shadow: var(--shadow-soft);
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--font-body);
+}
+
+.custom-table th {
+  position: sticky;
+  top: 0;
+  background: #ECE8E1;
+  padding: 14px 20px;
+  font-size: var(--font-metadata);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-neutral);
+  z-index: 10;
+}
+
+.custom-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-divider);
+  color: var(--text-primary);
+}
+
+.custom-table tr:nth-child(even) { background-color: #FAFAFA; }
+.custom-table tr:last-child td { border-bottom: none; }
+.custom-table tr:hover { background: #E8F4F4; }
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--action-blue);
+  box-shadow: 0 0 8px var(--action-blue);
+  display: inline-block;
+}
+
+@keyframes nodeGlow {
+  0%   { box-shadow: 0 0 0 0 rgba(14, 116, 144, 0.4); border-color: var(--action-blue); }
+  50%  { box-shadow: 0 0 20px 3px rgba(14, 116, 144, 0.3); border-color: var(--action-blue); }
+  100% { box-shadow: 0 0 0 0 rgba(14, 116, 144, 0.4); border-color: var(--action-blue); }
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.node-running-glow { animation: nodeGlow 1.6s infinite ease-in-out !important; }
+.fade-in-slide { animation: fadeInSlide 200ms ease-out forwards; }
