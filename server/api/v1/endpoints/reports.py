@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response
-from server.agents.reports.exporter import ReportExportAgent
+from agents.reports.exporter import ReportExportAgent
 
 router = APIRouter()
 exporter = ReportExportAgent()

@@ -3,8 +3,8 @@ import logging
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from server.storage.factory import get_storage_backend
-from server.jobs.worker import job_manager
+from storage.factory import get_storage_backend
+from jobs.worker import job_manager
 
 logger = logging.getLogger("compliance_copilot.api.upload")
 

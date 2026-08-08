@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -23,6 +23,7 @@ import {
   Filler
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { fetchDashboardStats, fetchContracts } from '../api/client';
 
 ChartJS.register(
   CategoryScale,
@@ -36,7 +37,24 @@ ChartJS.register(
   Filler
 );
 
-export default function DashboardView({ stats, recentContracts, _timeline, onNavigate }) {
+export default function DashboardView({ stats: initialStats, recentContracts: initialContracts, _timeline, onNavigate }) {
+  const [dashboardStats, setDashboardStats] = useState(initialStats || null);
+  const [contractsList, setContractsList] = useState(initialContracts || []);
+
+  useEffect(() => {
+    async function loadLiveData() {
+      try {
+        const liveStats = await fetchDashboardStats();
+        if (liveStats) setDashboardStats(liveStats);
+        const liveContracts = await fetchContracts();
+        if (liveContracts && liveContracts.length > 0) setContractsList(liveContracts);
+      } catch (err) {
+        console.warn("Backend API fetch exception for dashboard stats:", err);
+      }
+    }
+    loadLiveData();
+  }, []);
+
   const chartData = {
     labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
     datasets: [
@@ -148,14 +166,14 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
             <Scale size={20} strokeWidth={1.75} color="#15803D" />
           </div>
           <div style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
-            {stats?.complianceScore || 94.2}%
+            {dashboardStats?.averageComplianceScore || 94.2}%
           </div>
           <div style={{ fontSize: '12.5px', color: '#15803D', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
             <TrendingUp size={14} /> +4.2% <span style={{ color: '#64748B', fontWeight: 400 }}>vs last quarter</span>
           </div>
         </div>
 
-        {/* KPI 2: Circular Risk Gauge Indicator (🛡 HIGH 81) */}
+        {/* KPI 2: Circular Risk Gauge Indicator */}
         <div className="col-3 enterprise-card" style={{ padding: '24px', borderLeft: '4px solid #B91C1C' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
             <span className="metadata-text" style={{ textTransform: 'uppercase', fontWeight: 700 }}>Risk Exposure</span>
@@ -198,7 +216,7 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
             <Scroll size={20} strokeWidth={1.75} color="#0E7490" />
           </div>
           <div style={{ fontSize: '32px', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
-            {stats?.totalContracts || 1482}
+            {dashboardStats?.totalContracts || 1482}
           </div>
           <div style={{ fontSize: '12.5px', color: '#0E7490', marginTop: '12px', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
             +124 <span style={{ color: '#64748B', fontWeight: 400 }}>this quarter</span>
@@ -224,7 +242,7 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
       {/* 3. CHARTS & LIVE FEED GRID */}
       <div className="grid-12">
         
-        {/* Compliance Trend Chart (8 Columns) */}
+        {/* Compliance Trend Chart */}
         <div className="col-8 enterprise-card" style={{ padding: '28px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <div className="signature-accent-bar">
@@ -240,7 +258,7 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
           </div>
         </div>
 
-        {/* Live Agent Activity Feed (4 Columns) */}
+        {/* Live Agent Activity Feed */}
         <div className="col-4 enterprise-card" style={{ padding: '28px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -291,7 +309,7 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
 
       </div>
 
-      {/* 4. RECENT CONTRACTS DIRECTORY TABLE WITH INDIAN ENTERPRISE ENTITIES */}
+      {/* 4. RECENT CONTRACTS DIRECTORY TABLE */}
       <div className="grid-12">
         <div className="col-12 custom-table-container">
           <div style={{ padding: '20px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #D6D3D1', background: '#FFFFFF' }}>
@@ -317,7 +335,7 @@ export default function DashboardView({ stats, recentContracts, _timeline, onNav
               </tr>
             </thead>
             <tbody>
-              {recentContracts.slice(0, 5).map((contract) => (
+              {contractsList.slice(0, 5).map((contract) => (
                 <tr key={contract.id}>
                   <td>
                     <div style={{ fontWeight: 700, color: '#0F172A' }}>{contract.title}</div>

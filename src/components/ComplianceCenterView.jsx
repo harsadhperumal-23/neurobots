@@ -1,14 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scale } from 'lucide-react';
+import { fetchComplianceMatrix } from '../api/client';
 
 export default function ComplianceCenterView({ frameworks }) {
-  const defaultFrameworks = frameworks || [
-    { id: "GDPR", name: "EU General Data Protection Regulation", score: 68, status: "Non-Compliant", color: "#B91C1C", compliantRules: 17, totalRules: 25 },
-    { id: "DPDP", name: "India Digital Personal Data Protection Act 2023", score: 72, status: "Action Needed", color: "#B45309", compliantRules: 18, totalRules: 25 },
-    { id: "SOC2", name: "SOC 2 Type II Security & Trust Principles", score: 92, status: "Compliant", color: "#15803D", compliantRules: 23, totalRules: 25 },
-    { id: "ISO27001", name: "ISO/IEC 27001:2022 Information Security", score: 88, status: "Compliant", color: "#15803D", compliantRules: 22, totalRules: 25 },
-    { id: "HIPAA", name: "HIPAA Security & Privacy Safeguards", score: 76, status: "Action Needed", color: "#B45309", compliantRules: 19, totalRules: 25 }
-  ];
+  const [liveFrameworks, setLiveFrameworks] = useState(frameworks || [
+    { id: "DPDP_2023", name: "India Digital Personal Data Protection Act 2023", score: 88, status: "Action Needed", color: "#B45309", compliantRules: 22, totalRules: 25 },
+    { id: "CERT_IN_2022", name: "CERT-In 6-Hour Cyber Directions 2022", score: 72, status: "Non-Compliant", color: "#B91C1C", compliantRules: 18, totalRules: 25 },
+    { id: "COMPANIES_ACT", name: "Companies Act 2013 Internal Financial Controls", score: 94, status: "Compliant", color: "#15803D", compliantRules: 24, totalRules: 25 },
+    { id: "SEBI_LODR", name: "SEBI (LODR) Listing Regulations 2015", score: 98, status: "Compliant", color: "#15803D", compliantRules: 25, totalRules: 25 },
+    { id: "ISO27001", name: "ISO/IEC 27001:2022 Information Security", score: 92, status: "Compliant", color: "#15803D", compliantRules: 23, totalRules: 25 }
+  ]);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const matrix = await fetchComplianceMatrix();
+        if (matrix && matrix.length > 0) {
+          const mapped = matrix.map(m => ({
+            id: m.id,
+            name: m.title,
+            score: m.compliancePct,
+            status: m.status,
+            color: m.compliancePct >= 85 ? "#15803D" : m.compliancePct >= 70 ? "#B45309" : "#B91C1C",
+            compliantRules: Math.round((m.compliancePct / 100) * 25),
+            totalRules: 25
+          }));
+          setLiveFrameworks(mapped);
+        }
+      } catch (err) {
+        console.warn("Backend API fetch error for compliance matrix:", err);
+      }
+    }
+    loadData();
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', width: '100%' }}>
@@ -30,9 +54,9 @@ export default function ComplianceCenterView({ frameworks }) {
         <span className="badge badge-gold" style={{ fontSize: '11px' }}>AI VERIFIED AUDIT</span>
       </div>
 
-      {/* CIRCULAR PROGRESS INDICATORS GRID (12 Columns) */}
+      {/* CIRCULAR PROGRESS INDICATORS GRID */}
       <div className="grid-12">
-        {defaultFrameworks.map((fw) => {
+        {liveFrameworks.map((fw) => {
           const isPassed = fw.score >= 85;
           const isPartial = fw.score >= 70 && fw.score < 85;
           const statusColor = isPassed ? '#15803D' : isPartial ? '#B45309' : '#B91C1C';

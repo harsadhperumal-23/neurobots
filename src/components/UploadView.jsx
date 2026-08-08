@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   UploadCloud, 
   FileText, 
@@ -8,6 +8,7 @@ import {
   RotateCcw,
   Sparkles
 } from 'lucide-react';
+import { uploadContractFile, connectWebSocket } from '../api/client';
 import { processContractWithAI } from '../services/aiPipelineEngine';
 
 export default function UploadView({ onUploadSuccess }) {
@@ -17,6 +18,7 @@ export default function UploadView({ onUploadSuccess }) {
   const [stepMessage, setStepMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
+  const wsRef = useRef(null);
 
   const processingSteps = [
     "OCR Agent: Ingesting document structure & page coordinates...",
@@ -49,6 +51,10 @@ export default function UploadView({ onUploadSuccess }) {
     const files = e.target.files;
     if (files && files.length > 0) {
       const file = files[0];
+      if (file.size > 100 * 1024 * 1024) {
+        alert("File size exceeds 100MB limit.");
+        return;
+      }
       setSelectedFile({
         name: file.name,
         size: formatFileSize(file.size),
@@ -68,6 +74,10 @@ export default function UploadView({ onUploadSuccess }) {
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
       const file = files[0];
+      if (file.size > 100 * 1024 * 1024) {
+        alert("File size exceeds 100MB limit.");
+        return;
+      }
       setSelectedFile({
         name: file.name,
         size: formatFileSize(file.size),
@@ -94,6 +104,22 @@ export default function UploadView({ onUploadSuccess }) {
     setCurrentStep(0);
 
     try {
+      if (selectedFile.rawFile) {
+        // Connect WebSockets for live streaming pipeline updates
+        wsRef.current = connectWebSocket("global", (eventPayload) => {
+          if (eventPayload.event === "agent_progress") {
+            const data = eventPayload.data || {};
+            if (data.step !== undefined) setCurrentStep(data.step);
+            if (data.msg) setStepMessage(data.msg);
+          }
+        });
+
+        // Trigger real backend upload endpoint
+        const uploadRes = await uploadContractFile(selectedFile.rawFile);
+        console.log("Uploaded file to backend:", uploadRes);
+      }
+
+      // Run pipeline analysis engine & trigger view navigation
       const analyzedPayload = await processContractWithAI(selectedFile, (stepIdx, msg) => {
         setCurrentStep(stepIdx);
         setStepMessage(msg);
@@ -102,10 +128,21 @@ export default function UploadView({ onUploadSuccess }) {
       setIsProcessing(false);
       onUploadSuccess(analyzedPayload);
     } catch (err) {
-      console.error("Pipeline analysis failed:", err);
+      console.warn("Backend upload exception (falling back to client engine):", err);
+      const fallbackPayload = await processContractWithAI(selectedFile, (stepIdx, msg) => {
+        setCurrentStep(stepIdx);
+        setStepMessage(msg);
+      });
       setIsProcessing(false);
+      onUploadSuccess(fallbackPayload);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (wsRef.current) wsRef.current.close();
+    };
+  }, []);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -169,7 +206,7 @@ export default function UploadView({ onUploadSuccess }) {
                   Drag & Drop Contract File Here
                 </h3>
                 <p style={{ fontSize: '14px', color: '#64748B' }}>
-                  Supports <strong style={{ color: '#0F172A' }}>PDF</strong>, <strong style={{ color: '#0F172A' }}>DOCX</strong>, and <strong style={{ color: '#0F172A' }}>DOC</strong> formats
+                  Supports <strong style={{ color: '#0F172A' }}>PDF</strong>, <strong style={{ color: '#0F172A' }}>DOCX</strong>, and <strong style={{ color: '#0F172A' }}>DOC</strong> formats (Up to 100MB)
                 </p>
               </div>
 

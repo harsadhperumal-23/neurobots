@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Network } from 'lucide-react';
+import { fetchKnowledgeGraphNodes } from '../api/client';
 import { KNOWLEDGE_GRAPH_DATA } from '../mockData';
 
 export default function KnowledgeGraphView() {
   const [selectedNodeId, setSelectedNodeId] = useState("N-1");
   const [filterType, setFilterType] = useState("All");
+  const [graphData, setGraphData] = useState(KNOWLEDGE_GRAPH_DATA);
 
-  const nodes = KNOWLEDGE_GRAPH_DATA.nodes;
-  const links = KNOWLEDGE_GRAPH_DATA.links;
+  useEffect(() => {
+    async function loadGraph() {
+      try {
+        const liveGraph = await fetchKnowledgeGraphNodes();
+        if (liveGraph && liveGraph.nodes) setGraphData(liveGraph);
+      } catch (err) {
+        console.warn("Backend fetch exception for Knowledge Graph:", err);
+      }
+    }
+    loadGraph();
+  }, []);
 
-  const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0];
+  const nodes = graphData.nodes || [];
+  const links = graphData.links || [];
+
+  const selectedNode = nodes.find(n => n.id === selectedNodeId) || nodes[0] || { label: 'Node', type: 'Entity', desc: '' };
   const filteredNodes = nodes.filter(n => filterType === "All" || n.type === filterType);
-
   const connectedLinks = links.filter(l => l.source === selectedNodeId || l.target === selectedNodeId);
 
   return (
@@ -75,7 +88,7 @@ export default function KnowledgeGraphView() {
             overflow: 'hidden'
           }}
         >
-          {/* Subtle SVG Connection Edges */}
+          {/* SVG Connection Edges */}
           <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
             <line x1="220" y1="280" x2="420" y2="160" stroke="#0E7490" strokeWidth="1.75" strokeOpacity="0.4" strokeDasharray="4 4" />
             <line x1="220" y1="280" x2="420" y2="380" stroke="#0E7490" strokeWidth="1.75" strokeOpacity="0.4" strokeDasharray="4 4" />
@@ -85,23 +98,20 @@ export default function KnowledgeGraphView() {
             <line x1="620" y1="220" x2="780" y2="280" stroke="#B91C1C" strokeWidth="2" />
           </svg>
 
-          {/* Interactive White Graph Nodes with Bronze Active Highlight */}
+          {/* Interactive White Graph Nodes */}
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
             {filteredNodes.map((node, i) => {
               const isSelected = selectedNodeId === node.id;
               
               const positions = [
-                { top: '45%', left: '15%' }, // N-1 Kaveri Manufacturing
-                { top: '22%', left: '42%' }, // N-2 Cauvery Tech
-                { top: '65%', left: '42%' }, // N-3 Chennai Digital
-                { top: '15%', left: '62%' }, // N-4 MSA Contract
-                { top: '35%', left: '62%' }, // N-5 DPA Contract
-                { top: '75%', left: '62%' }, // N-6 Sec 12.4
-                { top: '85%', left: '40%' }, // N-7 Sec 8.2
-                { top: '15%', left: '82%' }, // N-8 DPDP Act
-                { top: '35%', left: '82%' }, // N-9 CERT-In
-                { top: '55%', left: '82%' }, // N-10 Risk
-                { top: '75%', left: '82%' }  // N-11 Obligation
+                { top: '45%', left: '15%' },
+                { top: '22%', left: '42%' },
+                { top: '65%', left: '42%' },
+                { top: '15%', left: '62%' },
+                { top: '35%', left: '62%' },
+                { top: '75%', left: '62%' },
+                { top: '85%', left: '40%' },
+                { top: '15%', left: '82%' }
               ];
 
               const pos = positions[i] || { top: `${30 + (i * 12)}%`, left: `${20 + (i * 10)}%` };

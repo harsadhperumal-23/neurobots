@@ -22,3 +22,25 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Environment
+server/.env
+server/malayalam.env
+
+# Python
+server/.venv/
+__pycache__/
+*.pyc
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads
+server/server/media/
+
+# Node
+node_modules/
+dist/

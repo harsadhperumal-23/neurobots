@@ -2,8 +2,8 @@ import hashlib
 import uuid
 import logging
 from typing import Tuple
-from server.storage.base import StorageBackend
-from server.config import settings
+from storage.base import StorageBackend
+from config import settings
 
 logger = logging.getLogger("compliance_copilot.storage.s3")
 

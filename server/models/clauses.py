@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Integer, Text, JSON, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
-from server.database import Base
+from database import Base
 
 class Clause(Base):
     __tablename__ = "clauses"

@@ -1,7 +1,7 @@
 import re
 import logging
 from typing import Dict, Any, List
-from server.providers.factory import get_ai_provider
+from providers.factory import get_ai_provider
 
 logger = logging.getLogger("compliance_copilot.agents.ner")
 

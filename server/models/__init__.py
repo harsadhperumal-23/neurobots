@@ -1,13 +1,13 @@
-from server.models.organizations import Organization
-from server.models.users import User
-from server.models.contracts import Contract, ContractVersion
-from server.models.clauses import Clause
-from server.models.entities import Entity
-from server.models.risks import Risk
-from server.models.compliance import ComplianceCheck
-from server.models.recommendations import Recommendation
-from server.models.executions import AIExecution
-from server.models.audit import AuditLog
+from models.organizations import Organization
+from models.users import User
+from models.contracts import Contract, ContractVersion
+from models.clauses import Clause
+from models.entities import Entity
+from models.risks import Risk
+from models.compliance import ComplianceCheck
+from models.recommendations import Recommendation
+from models.executions import AIExecution
+from models.audit import AuditLog
 
 __all__ = [
     "Organization",

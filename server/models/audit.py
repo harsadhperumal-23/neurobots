@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, Text, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
-from server.database import Base
+from database import Base
 
 class AuditLog(Base):
     __tablename__ = "audit_logs"

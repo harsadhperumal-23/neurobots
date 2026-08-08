@@ -2,8 +2,8 @@ import asyncio
 import uuid
 import logging
 from typing import Dict, Any, Optional
-from server.pipeline.orchestrator import LangGraphPipelineOrchestrator
-from server.websockets.manager import manager
+from pipeline.orchestrator import LangGraphPipelineOrchestrator
+from websockets.manager import manager
 
 logger = logging.getLogger("compliance_copilot.jobs.worker")
 

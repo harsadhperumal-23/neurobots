@@ -40,18 +40,41 @@ export async function fetchJobStatus(jobId) {
   return await res.json();
 }
 
+export async function fetchDashboardStats() {
+  const res = await fetch(`${API_BASE_URL}/dashboard/stats`);
+  if (!res.ok) throw new Error("Failed to fetch dashboard stats.");
+  return await res.json();
+}
+
+export async function fetchComplianceMatrix() {
+  const res = await fetch(`${API_BASE_URL}/compliance/matrix`);
+  if (!res.ok) throw new Error("Failed to fetch compliance matrix.");
+  return await res.json();
+}
+
+export async function fetchKnowledgeGraphNodes() {
+  const res = await fetch(`${API_BASE_URL}/knowledge-graph/nodes`);
+  if (!res.ok) throw new Error("Failed to fetch knowledge graph nodes.");
+  return await res.json();
+}
+
 export async function queryRAGAssistant(query, contractId, contractTitle) {
   const res = await fetch(`${API_BASE_URL}/rag/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      query,
+      question: query,
+      query: query,
       contract_id: contractId,
       contract_title: contractTitle
     })
   });
-  if (!res.ok) throw new Error("RAG query failed.");
-  return await res.json();
+
+  const data = await res.json();
+  if (!res.ok && !data.error && !data.details) {
+    throw new Error(`RAG query failed (${res.status}): ${res.statusText}`);
+  }
+  return data;
 }
 
 export function getReportDownloadUrl(contractId, format = "pdf") {

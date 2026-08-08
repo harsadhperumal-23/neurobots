@@ -3,8 +3,8 @@ import hashlib
 import uuid
 import aiofiles
 from typing import Tuple
-from server.storage.base import StorageBackend
-from server.config import settings
+from storage.base import StorageBackend
+from config import settings
 
 class LocalStorage(StorageBackend):
     def __init__(self, base_dir: str = None):

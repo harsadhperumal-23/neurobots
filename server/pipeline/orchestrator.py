@@ -3,16 +3,16 @@ import logging
 from typing import Dict, Any, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from server.agents.ocr.extractor import OCRAgent
-from server.agents.ner.extractor import NERAgent
-from server.agents.clauses.extractor import ClauseAgent
-from server.agents.risk.evaluator import RiskAgent
-from server.agents.compliance.auditor import ComplianceAgent
-from server.agents.recommendation.drafter import RecommendationAgent
-from server.agents.summary.briefing import ExecutiveSummaryAgent
-from server.agents.knowledge_graph.synthesizer import KnowledgeGraphAgent
-from server.agents.rag.retriever import RAGService
-from server.websockets.manager import manager
+from agents.ocr.extractor import OCRAgent
+from agents.ner.extractor import NERAgent
+from agents.clauses.extractor import ClauseAgent
+from agents.risk.evaluator import RiskAgent
+from agents.compliance.auditor import ComplianceAgent
+from agents.recommendation.drafter import RecommendationAgent
+from agents.summary.briefing import ExecutiveSummaryAgent
+from agents.knowledge_graph.synthesizer import KnowledgeGraphAgent
+from agents.rag.retriever import RAGService
+from websockets.manager import manager
 
 logger = logging.getLogger("compliance_copilot.pipeline.orchestrator")
 
